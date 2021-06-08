@@ -49,9 +49,14 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green,
-        leading: Container(
-          child: Image(
-            image: AssetImage('Assets/logo.png'),
+        title: Container(
+          child: Row(
+            children: [
+              Image(
+                image: AssetImage('Assets/logo.png'),
+                height: 60,
+              ),
+            ],
           ),
         ),
       ),
