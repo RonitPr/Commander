@@ -61,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void refreshCommands() async {
-    List<Command>? commands = await getCommandsById('a');
+    List<Command>? commands = await getCommandsById(currentUser!.userKey);
     setState(() {
       this.commands = commands!;
     });
@@ -158,6 +158,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: this.currentUser == null
           ? LoginScreen(onLogin)
           : MainScreen(
+              user: currentUser!,
               commands: commands,
             ),
       floatingActionButton: this.currentUser == null
