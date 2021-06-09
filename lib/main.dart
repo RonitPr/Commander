@@ -2,6 +2,7 @@ import 'package:commander/Group.dart';
 import 'package:commander/screens/LoginScreen.dart';
 import 'package:commander/screens/mainScreen.dart';
 import 'package:commander/server/command.dart';
+import 'package:commander/server/group.dart';
 import 'package:commander/widget/CommanderDialogUI.dart';
 import 'package:commander/widget/CreateCommandForm.dart';
 import 'package:commander/widget/CreateGroupForm.dart';
@@ -40,6 +41,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Command> commands = [];
   List<Group> groups = <Group>[
     Group(
+      id: "someRandomId",
       title: 'קבוצה א׳',
       users: [
         User('איש 1', 'aaa'),
@@ -62,6 +64,14 @@ class _MyHomePageState extends State<MyHomePage> {
     List<Command>? commands = await getCommandsById('a');
     setState(() {
       this.commands = commands!;
+    });
+  }
+
+  void refreshGroups() async {
+    List<Group>? groups;
+    groups = (await getGroups(currentUser!.userKey))!.cast<Group>();
+    setState(() {
+      this.groups = groups!;
     });
   }
 
@@ -114,7 +124,12 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: TextButton(
                             onPressed: () async {
                               await getDialog(
-                                  context, "צור קבוצה חדשה", CreateGroupForm());
+                                  context,
+                                  "צור קבוצה חדשה",
+                                  CreateGroupForm(
+                                    author: this.currentUser!.userKey,
+                                    refreshFunction: refreshGroups,
+                                  ));
                             },
                             style: TextButton.styleFrom(
                               primary: Colors.white,

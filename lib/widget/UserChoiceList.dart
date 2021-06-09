@@ -1,9 +1,12 @@
+import 'package:commander/User.dart';
 import 'package:commander/controllers/UserChoiceForGroupsController.dart';
 import 'package:flutter/material.dart';
 
 class UserChoiceList extends StatelessWidget {
   final UserChoiceForGroupController userChoiceController;
-  const UserChoiceList({Key? key, required this.userChoiceController})
+  final List<User> users;
+  const UserChoiceList(
+      {Key? key, required this.userChoiceController, required this.users})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -19,10 +22,10 @@ class UserChoiceList extends StatelessWidget {
           ),
           clipBehavior: Clip.antiAlias,
           child: ListView.builder(
-            itemCount: 10,
+            itemCount: users.length,
             itemBuilder: (BuildContext context, int index) {
-              String userId = "12345" + index.toString();
-              String userName = "שם של דביל" + index.toString();
+              String userId = users[index].userKey;
+              String userName = users[index].username;
               return CheckboxListTile(
                 value: this.userChoiceController.containsId(userId),
                 title: Text(

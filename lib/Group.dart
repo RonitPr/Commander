@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 import 'User.dart';
 
 class Group extends StatelessWidget {
+  final String id;
   final String title;
   final List<User> users;
 
-  const Group({Key? key, required this.title, required this.users})
+  const Group(
+      {Key? key, required this.title, required this.users, required this.id})
       : super(key: key);
 
   @override
