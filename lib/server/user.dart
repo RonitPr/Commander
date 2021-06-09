@@ -15,3 +15,17 @@ Future<User?> getUserById(String uid) async {
 
   return User(userMap['username'], userMap['uid']);
 }
+
+Future<List<User>?> getAllUsers() async {
+  Uri url = Uri.parse('$server_url/getAllUsers');
+  http.Response r = await http.get(url);
+  if (r.statusCode != 200) {
+    return null;
+  }
+  List<dynamic> usersData = jsonDecode(r.body);
+  List<User> users = [];
+  usersData.forEach((userData) {
+    users.add(User(userData["username"], userData["uid"]));
+  });
+  return users;
+}

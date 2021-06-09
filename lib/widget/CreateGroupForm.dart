@@ -1,6 +1,8 @@
 import 'package:commander/Group.dart';
+import 'package:commander/User.dart';
 import 'package:commander/controllers/UserChoiceForGroupsController.dart';
 import 'package:commander/server/group.dart';
+import 'package:commander/server/user.dart';
 import 'package:commander/widget/UserChoiceList.dart';
 import 'package:flutter/material.dart';
 
@@ -20,6 +22,16 @@ class _CreateGroupFormState extends State<CreateGroupForm> {
   UserChoiceForGroupController userChoiceController =
       UserChoiceForGroupController();
   TextEditingController groupNameController = TextEditingController();
+  List<User> users = [];
+  @override
+  void initState() {
+    super.initState();
+    getAllUsers().then((value) {
+      setState(() {
+        this.users = value!;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +68,7 @@ class _CreateGroupFormState extends State<CreateGroupForm> {
           ),
           UserChoiceList(
             userChoiceController: this.userChoiceController,
+            users: users,
           ),
           Spacer(flex: 2),
           Center(

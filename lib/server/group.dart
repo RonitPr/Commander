@@ -30,22 +30,39 @@ Future<List<Group?>?> getGroups(String uid) async {
   }
   List<dynamic> groupsMap = jsonDecode(r.body);
   List<Group> groups = [];
-  groupsMap.forEach((groupObject) {
-    groups.add(Group(
-      id: groupObject["gid"],
-      title: groupObject["title"],
-      users: createUserList(groupObject["uid_list"] as List<String>),
-    ));
+  await Future.forEach(groupsMap, (groupObject) async {
+    if (groupObject != null) {
+      Map<dynamic, dynamic> a = Map.from(groupObject as Map<dynamic, dynamic>);
+      List<User> users = await createUserList(a["uid_list"]);
+      groups.add(Group(
+        id: groupObject["gid"],
+        title: groupObject["title"],
+        users: users,
+      ));
+    }
   });
+
+  // groupsMap.forEach(
+  //   (groupObject) {
+  //     createUserList(groupObject["uid_list"]).then((users) {
+  //       groups.add(Group(
+  //         id: groupObject["gid"],
+  //         title: groupObject["title"],
+  //         users: users,
+  //       ));
+  //     });
+  //   },
+  // );
 
   return groups;
 }
 
-List<User> createUserList(List<String> uidList) {
+Future<List<User>> createUserList(List<dynamic> uidList) async {
   List<User> users = [];
-  uidList.forEach((uid) async {
-    User? user = await getUserById(uid);
-    users.add(user!);
+  await Future.forEach(uidList, (uid) {
+    getUserById(uid as String).then((user) {
+      users.add(user!);
+    });
   });
   return users;
 }
