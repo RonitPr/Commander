@@ -40,6 +40,7 @@ class Group extends StatelessWidget {
                 CreateCommandForm2(
                   author: author,
                   refreshFunction: refreshFunction,
+                  fromGroup: this.users,
                 ),
               );
             },

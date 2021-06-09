@@ -7,10 +7,12 @@ import 'package:file_picker/file_picker.dart';
 class CreateCommandForm2 extends StatefulWidget {
   final String author;
   final Function refreshFunction;
+  final List<User> fromGroup;
   const CreateCommandForm2({
     Key? key,
     required this.author,
     required this.refreshFunction,
+    this.fromGroup = const [],
   }) : super(key: key);
 
   @override
@@ -29,11 +31,15 @@ class _CreateCommandForm2State extends State<CreateCommandForm2> {
   @override
   void initState() {
     super.initState();
-    getAllUsers().then((value) {
-      setState(() {
-        this.users = value!;
+    if (widget.fromGroup.isNotEmpty) {
+      this.users = widget.fromGroup;
+    } else {
+      getAllUsers().then((value) {
+        setState(() {
+          this.users = value!;
+        });
       });
-    });
+    }
   }
 
   @override
