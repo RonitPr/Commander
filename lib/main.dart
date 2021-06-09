@@ -1,4 +1,5 @@
 import 'package:commander/Group.dart';
+import 'package:commander/screens/LoginScreen.dart';
 import 'package:commander/screens/mainScreen.dart';
 import 'package:commander/widget/CommanderDialogUI.dart';
 import 'package:commander/widget/CreateGroupForm.dart';
@@ -32,6 +33,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  User? currentUser;
   List<Group> groups = <Group>[
     Group(
       title: 'קבוצה א׳',
@@ -44,6 +46,12 @@ class _MyHomePageState extends State<MyHomePage> {
       ],
     ),
   ];
+
+  void onLogin(User user) {
+    setState(() {
+      this.currentUser = user;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,71 +69,76 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
-      endDrawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.lightGreen[800],
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.group,
-                    size: 40,
-                    color: Colors.white,
-                  ),
-                  Text(
-                    'הקבוצות שלי',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+      endDrawer: this.currentUser == null
+          ? null
+          : Drawer(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: <Widget>[
+                  DrawerHeader(
+                    decoration: BoxDecoration(
+                      color: Colors.lightGreen[800],
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.group,
+                          size: 40,
+                          color: Colors.white,
+                        ),
+                        Text(
+                          'הקבוצות שלי',
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(top: 10),
+                          child: TextButton(
+                            onPressed: () async {
+                              await getDialog(
+                                  context, "צור קבוצה חדשה", CreateGroupForm());
+                            },
+                            style: TextButton.styleFrom(
+                              primary: Colors.white,
+                              backgroundColor: Colors.white,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text('צור קבוצה חדשה',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.lightGreen[800],
+                                  )),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  Container(
-                    margin: EdgeInsets.only(top: 10),
-                    child: TextButton(
-                      onPressed: () async {
-                        // TODO :: create new group.
-                        await getDialog(
-                            context, "צור קבוצה חדשה", CreateGroupForm());
-                      },
-                      style: TextButton.styleFrom(
-                        primary: Colors.white,
-                        backgroundColor: Colors.white,
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text('צור קבוצה חדשה',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.lightGreen[800],
-                            )),
-                      ),
-                    ),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: this.groups,
                   ),
                 ],
               ),
             ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: this.groups,
+      body: this.currentUser == null ? LoginScreen(onLogin) : MainScreen(),
+      floatingActionButton: this.currentUser == null
+          ? null
+          : FloatingActionButton.extended(
+              onPressed: () async {
+                await getDialog(context, "צור דוגמה", Container());
+              },
+              label: Text('צור פקודה חדשה'),
+              icon: Icon(Icons.add),
+              backgroundColor: Colors.green[800],
             ),
-          ],
-        ),
-      ),
-      body: MainScreen(),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () async {},
-        label: Text('צור פקודה חדשה'),
-        icon: Icon(Icons.add),
-        backgroundColor: Colors.green[800],
-      ),
     );
   }
 }
