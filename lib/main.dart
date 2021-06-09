@@ -1,6 +1,7 @@
 import 'package:commander/Group.dart';
 import 'package:commander/screens/LoginScreen.dart';
 import 'package:commander/screens/mainScreen.dart';
+import 'package:commander/server/group.dart';
 import 'package:commander/widget/CommanderDialogUI.dart';
 import 'package:commander/widget/CreateGroupForm.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
   User? currentUser;
   List<Group> groups = <Group>[
     Group(
+      id: "someRandomId",
       title: 'קבוצה א׳',
       users: [
         User('איש 1', 'aaa'),
@@ -50,6 +52,14 @@ class _MyHomePageState extends State<MyHomePage> {
   void onLogin(User user) {
     setState(() {
       this.currentUser = user;
+    });
+  }
+
+  void refreshGroups() async {
+    List<Group>? groups;
+    groups = (await getGroups(currentUser!.userKey))!.cast<Group>();
+    setState(() {
+      this.groups = groups!;
     });
   }
 
@@ -106,6 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   "צור קבוצה חדשה",
                                   CreateGroupForm(
                                     author: this.currentUser!.userKey,
+                                    refreshFunction: refreshGroups,
                                   ));
                             },
                             style: TextButton.styleFrom(

@@ -1,3 +1,4 @@
+import 'package:commander/Group.dart';
 import 'package:commander/controllers/UserChoiceForGroupsController.dart';
 import 'package:commander/server/group.dart';
 import 'package:commander/widget/UserChoiceList.dart';
@@ -5,7 +6,10 @@ import 'package:flutter/material.dart';
 
 class CreateGroupForm extends StatefulWidget {
   final String author;
-  const CreateGroupForm({Key? key, required this.author}) : super(key: key);
+  final Function refreshFunction;
+  const CreateGroupForm(
+      {Key? key, required this.author, required this.refreshFunction})
+      : super(key: key);
 
   @override
   _CreateGroupFormState createState() => _CreateGroupFormState();
@@ -62,12 +66,14 @@ class _CreateGroupFormState extends State<CreateGroupForm> {
                 // Validate returns true if the form is valid, or false otherwise.
                 if (_formKey.currentState!.validate()) {
                   // Send data to server.
-                  var response = await createNewGroup(
+                  var responsePost = await createNewGroup(
                     widget.author,
                     this.userChoiceController.getSelectedUserIds(),
                     groupNameController.text,
                   );
-                  if (response == "OK")
+                  widget.refreshFunction();
+                  Navigator.pop(context);
+                  if (responsePost == "OK")
                     ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('יצירת קבוצה הושלמה בהצלחה')));
                   else
