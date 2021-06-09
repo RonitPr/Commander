@@ -7,6 +7,7 @@ import 'package:commander/widget/CreateCommandForm.dart';
 import 'package:commander/widget/CreateGroupForm.dart';
 import 'package:flutter/material.dart';
 
+import 'Command.dart';
 import 'User.dart';
 
 void main() {
