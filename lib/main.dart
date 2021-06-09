@@ -1,6 +1,7 @@
 import 'package:commander/Group.dart';
 import 'package:commander/screens/LoginScreen.dart';
 import 'package:commander/screens/mainScreen.dart';
+import 'package:commander/server/command.dart';
 import 'package:commander/widget/CommanderDialogUI.dart';
 import 'package:commander/widget/CreateCommandForm.dart';
 import 'package:commander/widget/CreateGroupForm.dart';
@@ -35,6 +36,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   User? currentUser;
+  List<Command> commands = [];
   List<Group> groups = <Group>[
     Group(
       title: 'קבוצה א׳',
@@ -51,6 +53,14 @@ class _MyHomePageState extends State<MyHomePage> {
   void onLogin(User user) {
     setState(() {
       this.currentUser = user;
+    });
+    refreshCommands();
+  }
+
+  void refreshCommands() async {
+    List<Command>? commands = await getCommandsById('a');
+    setState(() {
+      this.commands = commands!;
     });
   }
 
@@ -129,7 +139,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
             ),
-      body: this.currentUser == null ? LoginScreen(onLogin) : MainScreen(),
+      body: this.currentUser == null
+          ? LoginScreen(onLogin)
+          : MainScreen(
+              commands: commands,
+            ),
       floatingActionButton: this.currentUser == null
           ? null
           : FloatingActionButton.extended(

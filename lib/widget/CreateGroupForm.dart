@@ -1,4 +1,5 @@
 import 'package:commander/controllers/UserChoiceForGroupsController.dart';
+import 'package:commander/server/group.dart';
 import 'package:commander/widget/UserChoiceList.dart';
 import 'package:flutter/material.dart';
 
@@ -56,16 +57,23 @@ class _CreateGroupFormState extends State<CreateGroupForm> {
             child: ElevatedButton(
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.green)),
-              onPressed: () {
+              onPressed: () async {
+                // print(getStringFromList(
+                //     this.userChoiceController.getSelectedUserIds()));
                 // Validate returns true if the form is valid, or false otherwise.
                 if (_formKey.currentState!.validate()) {
                   // Send data to server.
-                  //print(groupNameController.text);
-                  //print(this.userChoiceController.getSelectedUserIds());
-                  // If the form is valid, display a snackbar. In the real world,
-                  // you'd often call a server or save the information in a database.
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('יצירת קבוצה הושלמה בהצלחה')));
+                  var response = await createNewGroup(
+                    "",
+                    this.userChoiceController.getSelectedUserIds(),
+                    groupNameController.text,
+                  );
+                  if (response == "OK")
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('יצירת קבוצה הושלמה בהצלחה')));
+                  else
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text('אופס.. נראה שהייתה בעיה ביצירה')));
                 }
               },
               child: Icon(Icons.done, color: Colors.white),
