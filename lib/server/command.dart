@@ -30,12 +30,20 @@ Future<List<Command>?> getCommandsById(String uid) async {
   for (var command in data) {
     String cid = command['cid'];
     String title = command['title'];
-    List required = command['required_list'] as List<dynamic>;
+    List require = command['required_list'] as List<dynamic>;
     List watchers = command['watch_list'] as List<dynamic>;
     List accepted = command['approved_list'] as List<dynamic>;
-    commands.add(Command(title, cid, required,
-        accepted, watchers));
+    commands.add(Command(title, cid, require, accepted, watchers));
   }
   print(commands);
   return commands;
+}
+
+Future<bool> approveCommand(String uid, String cid) async {
+  Uri uri = Uri.parse('$server_url/approveCommand?uid=$uid&cid=$cid');
+  http.Response r = await http.get(uri);
+  if (r.statusCode != 200) {
+    return false;
+  }
+  return true;
 }

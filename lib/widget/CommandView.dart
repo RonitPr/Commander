@@ -1,11 +1,19 @@
 import 'package:commander/Command.dart';
+import 'package:commander/User.dart';
+import 'package:commander/server/command.dart';
+import 'package:commander/server/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rounded_progress_bar/flutter_rounded_progress_bar.dart';
 import 'package:flutter_rounded_progress_bar/rounded_progress_bar_style.dart';
 
 class CommandView extends StatefulWidget {
   final Command command;
-  const CommandView(this.command, {Key? key}) : super(key: key);
+  final User user;
+  const CommandView(
+    this.command,
+    this.user, {
+    Key? key,
+  }) : super(key: key);
   @override
   _CommandViewState createState() => _CommandViewState();
 }
@@ -14,6 +22,13 @@ class _CommandViewState extends State<CommandView> {
   bool expanded = false;
   @override
   Widget build(BuildContext context) {
+    bool approved = false;
+    print(widget.command.accepted);
+    widget.command.accepted.forEach((element) {
+      if (element == widget.user.userKey) {
+        approved = true;
+      }
+    });
     List<dynamic> requireAndWatch =
         widget.command.require + widget.command.watch;
     return Container(
@@ -41,12 +56,46 @@ class _CommandViewState extends State<CommandView> {
               children: [
                 Container(
                   margin: EdgeInsets.only(bottom: 10),
-                  child: Text(
-                    widget.command.title,
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        widget.command.title,
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      !approved
+                          ? TextButton(
+                              onPressed: () {
+                                widget.command.accepted
+                                    .add(widget.user.userKey);
+                                approveCommand(
+                                        widget.user.userKey, widget.command.id)
+                                    .then(
+                                  (value) => ScaffoldMessenger.of(context)
+                                      .showSnackBar(
+                                    SnackBar(
+                                      content: Text(value
+                                          ? 'אישור נקלט בהצלחה'
+                                          : 'אופס.. נראה שהייתה בעיה'),
+                                    ),
+                                  ),
+                                );
+                                setState(() {});
+                              },
+                              style: TextButton.styleFrom(
+                                primary: Colors.white,
+                                backgroundColor: Colors.green,
+                              ),
+                              child: Text(' אשר פקודה '),
+                            )
+                          : Icon(
+                              Icons.check_circle_rounded,
+                              color: Colors.green,
+                            ),
+                    ],
                   ),
                 ),
                 RoundedProgressBar(
@@ -112,7 +161,9 @@ class _CommandViewState extends State<CommandView> {
                   child: ListView.builder(
                     itemCount: requireAndWatch.length,
                     itemBuilder: (BuildContext context, int index) {
-                      String userName = requireAndWatch[index];
+                      String userName = '';
+                      getUserById(requireAndWatch[index])
+                          .then((value) => userName = value!.username);
                       String status = '';
                       widget.command.accepted.forEach((element) {
                         if (element == requireAndWatch[index])

@@ -158,6 +158,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: this.currentUser == null
           ? LoginScreen(onLogin)
           : MainScreen(
+              user: currentUser!,
               commands: commands,
             ),
       floatingActionButton: this.currentUser == null
