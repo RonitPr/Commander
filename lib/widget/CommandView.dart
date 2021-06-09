@@ -14,6 +14,8 @@ class _CommandViewState extends State<CommandView> {
   bool expanded = false;
   @override
   Widget build(BuildContext context) {
+    List<dynamic> requireAndWatch =
+        widget.command.require + widget.command.watch;
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
@@ -48,8 +50,9 @@ class _CommandViewState extends State<CommandView> {
                   ),
                 ),
                 RoundedProgressBar(
-                  percent: widget.command.accepted.length /
-                      widget.command.required.length,
+                  percent: (widget.command.accepted.length /
+                          widget.command.require.length) *
+                      100,
                   paddingChildLeft: EdgeInsets.symmetric(horizontal: 10),
                   childLeft: Container(
                     padding: EdgeInsets.all(2),
@@ -58,7 +61,7 @@ class _CommandViewState extends State<CommandView> {
                       color: Colors.black38,
                     ),
                     child: Text(
-                      '${widget.command.accepted.length}/${widget.command.required.length}',
+                      '${widget.command.accepted.length}/${widget.command.require.length}',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -107,21 +110,18 @@ class _CommandViewState extends State<CommandView> {
                   ),
                   clipBehavior: Clip.antiAlias,
                   child: ListView.builder(
-                    itemCount: widget.command.required.length +
-                        widget.command.watch.length,
+                    itemCount: requireAndWatch.length,
                     itemBuilder: (BuildContext context, int index) {
-                      String userName = '';
-
+                      String userName = requireAndWatch[index];
                       String status = "accepted";
-                      if (index < widget.command.required.length) {
-                        userName = (widget.command.required[index]);
-                        if (widget.command.accepted
-                            .contains(widget.command.required[index]))
-                          status = "accepted";
-                        else
-                          status = "require";
-                      } else
+                      if (!widget.command.require
+                          .contains(requireAndWatch[index])) {
+                        status = "require";
+                      } else if (widget.command.watch
+                          .contains(requireAndWatch[index])) {
                         status = 'watcher';
+                      }
+
                       return ListTile(
                         trailing: status != "watcher"
                             ? Icon(

@@ -1,16 +1,14 @@
 class Command {
   String title;
   String id;
-  String url;
-  List<String> required;
-  List<String> accepted;
-  List<String> watch;
+  List<dynamic> require;
+  List<dynamic> accepted;
+  List<dynamic> watch;
 
   Command(
     this.title,
     this.id,
-    this.url,
-    this.required,
+    this.require,
     this.accepted,
     this.watch,
   );
