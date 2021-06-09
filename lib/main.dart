@@ -46,6 +46,12 @@ class _MyHomePageState extends State<MyHomePage> {
     ),
   ];
 
+  void onLogin(User user){
+    setState(() {
+      this.currentUser = user;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -120,7 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
             ),
-      body: this.currentUser == null ? LoginScreen() : MainScreen(),
+      body: this.currentUser == null ? LoginScreen(onLogin) : MainScreen(),
       floatingActionButton: this.currentUser == null
           ? null
           : FloatingActionButton.extended(
