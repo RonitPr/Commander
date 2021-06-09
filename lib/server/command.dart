@@ -6,8 +6,8 @@ import 'package:http/http.dart' as http;
 String server_url = 'https://commander-server.herokuapp.com';
 
 Future<String?> createCommand(String title, String author,
-    List<String> required, List<String> watchers) async {
-  String requiredStrings = getStringFromList(required);
+    List<String> requires, List<String> watchers) async {
+  String requiredStrings = getStringFromList(requires);
   String watchersStrings = getStringFromList(watchers);
   Uri uri = Uri.parse(
       '$server_url/addCommand?title=$title&author=$author&required_list=$requiredStrings&watch_list=$watchersStrings');
@@ -33,9 +33,7 @@ Future<List<Command>?> getCommandsById(String uid) async {
     List required = command['required_list'] as List<dynamic>;
     List watchers = command['watch_list'] as List<dynamic>;
     List accepted = command['approved_list'] as List<dynamic>;
-    commands.add(Command(title, cid, required,
-        accepted, watchers));
+    commands.add(Command(title, cid, required, accepted, watchers));
   }
-  print(commands);
   return commands;
 }
