@@ -2,6 +2,7 @@ import 'package:commander/Group.dart';
 import 'package:commander/screens/LoginScreen.dart';
 import 'package:commander/screens/mainScreen.dart';
 import 'package:commander/server/command.dart';
+import 'package:commander/server/group.dart';
 import 'package:commander/widget/CommanderDialogUI.dart';
 import 'package:commander/widget/CreateCommandForm.dart';
 import 'package:commander/widget/CreateGroupForm.dart';
@@ -40,6 +41,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Command> commands = [];
   List<Group> groups = <Group>[
     Group(
+      id: "someRandomId",
       title: 'קבוצה א׳',
       users: [
         User('איש 1', 'aaa'),
@@ -62,6 +64,14 @@ class _MyHomePageState extends State<MyHomePage> {
     List<Command>? commands = await getCommandsById('a');
     setState(() {
       this.commands = commands!;
+    });
+  }
+
+  void refreshGroups() async {
+    List<Group>? groups;
+    groups = (await getGroups(currentUser!.userKey))!.cast<Group>();
+    setState(() {
+      this.groups = groups!;
     });
   }
 
@@ -114,7 +124,12 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: TextButton(
                             onPressed: () async {
                               await getDialog(
-                                  context, "צור קבוצה חדשה", CreateGroupForm());
+                                  context,
+                                  "צור קבוצה חדשה",
+                                  CreateGroupForm(
+                                    author: this.currentUser!.userKey,
+                                    refreshFunction: refreshGroups,
+                                  ));
                             },
                             style: TextButton.styleFrom(
                               primary: Colors.white,
@@ -149,10 +164,21 @@ class _MyHomePageState extends State<MyHomePage> {
           ? null
           : FloatingActionButton.extended(
               onPressed: () async {
+                List<User> users = [
+                  User('1שם של דביל', 'userKey1'),
+                  User('2שם של דביל', 'userKey2'),
+                  User('3שם של דביל', 'userKey3'),
+                  User('4שם של דביל', 'userKey4'),
+                  User('5שם של דביל', 'userKey5'),
+                  User('6שם של דביל', 'userKey6'),
+                  User('7שם של דביל', 'userKey7'),
+                  User('8שם של דביל', 'userKey8'),
+                  User('9שם של דביל', 'userKey9'),
+                ];
                 await getDialog(
                   context,
                   "צור פקודה חדשה",
-                  CreateCommandForm(),
+                  CreateCommandForm(users),
                 );
               },
               label: Text('צור פקודה חדשה'),
@@ -161,6 +187,4 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
     );
   }
-
-  bool pushToDb(Command command) => false;
 }

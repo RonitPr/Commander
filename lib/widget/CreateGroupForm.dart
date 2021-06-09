@@ -1,10 +1,17 @@
+import 'package:commander/Group.dart';
+import 'package:commander/User.dart';
 import 'package:commander/controllers/UserChoiceForGroupsController.dart';
 import 'package:commander/server/group.dart';
+import 'package:commander/server/user.dart';
 import 'package:commander/widget/UserChoiceList.dart';
 import 'package:flutter/material.dart';
 
 class CreateGroupForm extends StatefulWidget {
-  const CreateGroupForm({Key? key}) : super(key: key);
+  final String author;
+  final Function refreshFunction;
+  const CreateGroupForm(
+      {Key? key, required this.author, required this.refreshFunction})
+      : super(key: key);
 
   @override
   _CreateGroupFormState createState() => _CreateGroupFormState();
@@ -15,6 +22,16 @@ class _CreateGroupFormState extends State<CreateGroupForm> {
   UserChoiceForGroupController userChoiceController =
       UserChoiceForGroupController();
   TextEditingController groupNameController = TextEditingController();
+  List<User> users = [];
+  @override
+  void initState() {
+    super.initState();
+    getAllUsers().then((value) {
+      setState(() {
+        this.users = value!;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +68,7 @@ class _CreateGroupFormState extends State<CreateGroupForm> {
           ),
           UserChoiceList(
             userChoiceController: this.userChoiceController,
+            users: users,
           ),
           Spacer(flex: 2),
           Center(
@@ -58,17 +76,17 @@ class _CreateGroupFormState extends State<CreateGroupForm> {
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.green)),
               onPressed: () async {
-                // print(getStringFromList(
-                //     this.userChoiceController.getSelectedUserIds()));
                 // Validate returns true if the form is valid, or false otherwise.
                 if (_formKey.currentState!.validate()) {
                   // Send data to server.
-                  var response = await createNewGroup(
-                    "",
+                  var responsePost = await createNewGroup(
+                    widget.author,
                     this.userChoiceController.getSelectedUserIds(),
                     groupNameController.text,
                   );
-                  if (response == "OK")
+                  widget.refreshFunction();
+                  Navigator.pop(context);
+                  if (responsePost == "OK")
                     ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('יצירת קבוצה הושלמה בהצלחה')));
                   else

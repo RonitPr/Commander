@@ -1,4 +1,8 @@
 import 'dart:convert';
+
+import 'package:commander/Group.dart';
+import 'package:commander/User.dart';
+import 'package:commander/server/user.dart';
 import 'package:commander/util/UtilFunctions.dart';
 import 'package:http/http.dart' as http;
 
@@ -16,4 +20,36 @@ Future<String?> createNewGroup(
   } else {
     return "OK";
   }
+}
+
+Future<List<Group?>?> getGroups(String uid) async {
+  Uri url = Uri.parse('$server_url/getUserGroups?uid=' + uid);
+  http.Response r = await http.get(url);
+  if (r.statusCode != 200) {
+    return null;
+  }
+  List<dynamic> groupsMap = jsonDecode(r.body);
+  List<Group> groups = [];
+  await Future.forEach(groupsMap, (groupObject) async {
+    if (groupObject != null) {
+      Map<dynamic, dynamic> a = Map.from(groupObject as Map<dynamic, dynamic>);
+      List<User> users = await createUserList(a["uid_list"]);
+      groups.add(Group(
+        id: groupObject["gid"],
+        title: groupObject["title"],
+        users: users,
+      ));
+    }
+  });
+  return groups;
+}
+
+Future<List<User>> createUserList(List<dynamic> uidList) async {
+  List<User> users = [];
+  await Future.forEach(uidList, (uid) {
+    getUserById(uid as String).then((user) {
+      users.add(user!);
+    });
+  });
+  return users;
 }
