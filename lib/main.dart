@@ -1,6 +1,7 @@
 import 'package:commander/Group.dart';
 import 'package:commander/screens/mainScreen.dart';
 import 'package:commander/widget/CommanderDialog.dart';
+import 'package:commander/widget/CreateGroupForm.dart';
 import 'package:flutter/material.dart';
 
 import 'User.dart';
@@ -89,8 +90,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   Container(
                     margin: EdgeInsets.only(top: 10),
                     child: TextButton(
-                      onPressed: () {
+                      onPressed: () async {
                         // TODO :: create new group.
+                        await getDialog(
+                            context, "צור קבוצה חדשה", CreateGroupForm());
                       },
                       style: TextButton.styleFrom(
                         primary: Colors.white,
