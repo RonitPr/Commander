@@ -113,15 +113,17 @@ class _CommandViewState extends State<CommandView> {
                     itemCount: requireAndWatch.length,
                     itemBuilder: (BuildContext context, int index) {
                       String userName = requireAndWatch[index];
-                      String status = "accepted";
-                      if (!widget.command.require
-                          .contains(requireAndWatch[index])) {
-                        status = "require";
-                      } else if (widget.command.watch
-                          .contains(requireAndWatch[index])) {
-                        status = 'watcher';
-                      }
-
+                      String status = '';
+                      widget.command.accepted.forEach((element) {
+                        if (element == requireAndWatch[index])
+                          status = 'accepted';
+                      });
+                      if (status == '')
+                        widget.command.require.forEach((element) {
+                          if (element == requireAndWatch[index])
+                            status = 'require';
+                        });
+                      if (status == '') status = 'watcher';
                       return ListTile(
                         trailing: status != "watcher"
                             ? Icon(
@@ -130,7 +132,7 @@ class _CommandViewState extends State<CommandView> {
                                     ? Colors.green
                                     : Colors.grey,
                               )
-                            : Container(),
+                            : Icon(Icons.remove_red_eye_outlined),
                         title: Text(
                           userName,
                           textDirection: TextDirection.rtl,
