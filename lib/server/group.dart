@@ -41,19 +41,6 @@ Future<List<Group?>?> getGroups(String uid) async {
       ));
     }
   });
-
-  // groupsMap.forEach(
-  //   (groupObject) {
-  //     createUserList(groupObject["uid_list"]).then((users) {
-  //       groups.add(Group(
-  //         id: groupObject["gid"],
-  //         title: groupObject["title"],
-  //         users: users,
-  //       ));
-  //     });
-  //   },
-  // );
-
   return groups;
 }
 
