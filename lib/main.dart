@@ -102,7 +102,11 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: TextButton(
                             onPressed: () async {
                               await getDialog(
-                                  context, "צור קבוצה חדשה", CreateGroupForm());
+                                  context,
+                                  "צור קבוצה חדשה",
+                                  CreateGroupForm(
+                                    author: this.currentUser!.userKey,
+                                  ));
                             },
                             style: TextButton.styleFrom(
                               primary: Colors.white,

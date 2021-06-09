@@ -4,7 +4,8 @@ import 'package:commander/widget/UserChoiceList.dart';
 import 'package:flutter/material.dart';
 
 class CreateGroupForm extends StatefulWidget {
-  const CreateGroupForm({Key? key}) : super(key: key);
+  final String author;
+  const CreateGroupForm({Key? key, required this.author}) : super(key: key);
 
   @override
   _CreateGroupFormState createState() => _CreateGroupFormState();
@@ -58,13 +59,11 @@ class _CreateGroupFormState extends State<CreateGroupForm> {
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.green)),
               onPressed: () async {
-                // print(getStringFromList(
-                //     this.userChoiceController.getSelectedUserIds()));
                 // Validate returns true if the form is valid, or false otherwise.
                 if (_formKey.currentState!.validate()) {
                   // Send data to server.
                   var response = await createNewGroup(
-                    "",
+                    widget.author,
                     this.userChoiceController.getSelectedUserIds(),
                     groupNameController.text,
                   );
