@@ -1,9 +1,11 @@
+import 'package:commander/Command.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rounded_progress_bar/flutter_rounded_progress_bar.dart';
 import 'package:flutter_rounded_progress_bar/rounded_progress_bar_style.dart';
 
 class CommandView extends StatefulWidget {
-  const CommandView({Key? key}) : super(key: key);
+  final Command command;
+  const CommandView(this.command, {Key? key}) : super(key: key);
   @override
   _CommandViewState createState() => _CommandViewState();
 }
@@ -38,7 +40,7 @@ class _CommandViewState extends State<CommandView> {
                 Container(
                   margin: EdgeInsets.only(bottom: 10),
                   child: Text(
-                    'כותרת של פקודה',
+                    widget.command.title,
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -46,7 +48,8 @@ class _CommandViewState extends State<CommandView> {
                   ),
                 ),
                 RoundedProgressBar(
-                  percent: 50,
+                  percent: widget.command.accepted.length /
+                      widget.command.required.length,
                   paddingChildLeft: EdgeInsets.symmetric(horizontal: 10),
                   childLeft: Container(
                     padding: EdgeInsets.all(2),
@@ -55,7 +58,7 @@ class _CommandViewState extends State<CommandView> {
                       color: Colors.black38,
                     ),
                     child: Text(
-                      '4/6',
+                      '${widget.command.accepted.length}/${widget.command.required.length}',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -104,11 +107,21 @@ class _CommandViewState extends State<CommandView> {
                   ),
                   clipBehavior: Clip.antiAlias,
                   child: ListView.builder(
-                    itemCount: 10,
+                    itemCount: widget.command.required.length +
+                        widget.command.watch.length,
                     itemBuilder: (BuildContext context, int index) {
-                      String userName =
-                          "שם של מישהו שאוכל במבה לולו " + index.toString();
+                      String userName = '';
+
                       String status = "accepted";
+                      if (index < widget.command.required.length) {
+                        userName = (widget.command.required[index]);
+                        if (widget.command.accepted
+                            .contains(widget.command.required[index]))
+                          status = "accepted";
+                        else
+                          status = "require";
+                      } else
+                        status = 'watcher';
                       return ListTile(
                         trailing: status != "watcher"
                             ? Icon(
