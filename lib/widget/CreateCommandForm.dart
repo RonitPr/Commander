@@ -4,24 +4,17 @@ import 'package:flutter/material.dart';
 import '../User.dart';
 
 class CreateCommandForm extends StatefulWidget {
-  const CreateCommandForm({Key? key}) : super(key: key);
+  final List<User> users;
+  const CreateCommandForm(
+    this.users, {
+    Key? key,
+  }) : super(key: key);
 
   @override
   _CreateCommandFormState createState() => _CreateCommandFormState();
 }
 
 class _CreateCommandFormState extends State<CreateCommandForm> {
-  List<User> users = [
-    User('1שם של דביל', 'userKey1'),
-    User('2שם של דביל', 'userKey2'),
-    User('3שם של דביל', 'userKey3'),
-    User('4שם של דביל', 'userKey4'),
-    User('5שם של דביל', 'userKey5'),
-    User('6שם של דביל', 'userKey6'),
-    User('7שם של דביל', 'userKey7'),
-    User('8שם של דביל', 'userKey8'),
-    User('9שם של דביל', 'userKey9'),
-  ];
   final _formKey = GlobalKey<FormState>();
   TextEditingController title = TextEditingController();
   String fileName = '';
@@ -98,22 +91,14 @@ class _CreateCommandFormState extends State<CreateCommandForm> {
             Directionality(
               textDirection: TextDirection.rtl,
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Text('שם משתמש'),
-                  SizedBox(
-                    width: 20,
+                  Padding(
+                    padding: const EdgeInsets.only(left: 80),
+                    child: Text('שם משתמש'),
                   ),
                   Text('מאשר'),
-                  SizedBox(
-                    width: 20,
-                  ),
                   Text('צופה'),
-                  SizedBox(
-                    width: 20,
-                  ),
                 ],
               ),
             ),
@@ -128,50 +113,43 @@ class _CreateCommandFormState extends State<CreateCommandForm> {
               child: Directionality(
                 textDirection: TextDirection.rtl,
                 child: ListView.builder(
-                  itemCount: users.length,
+                  itemCount: widget.users.length,
                   itemBuilder: (BuildContext context, int index) {
                     bool require = false;
                     bool watch = false;
                     return StatefulBuilder(
                       builder: (context, setState) => Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: Text(users[index].username),
+                            padding: const EdgeInsets.only(left: 80),
+                            child: Text(widget.users[index].username),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 25),
-                            // requires
-                            child: Checkbox(
-                              value: require,
-                              onChanged: (flag) {
-                                require = flag!;
-                                if (flag) {
-                                  requires.add(users[index].userKey);
-                                  watchs.remove(users[index].userKey);
-                                  watch = false;
-                                } else
-                                  requires.remove(users[index].userKey);
-                                setState(() {});
-                              },
-                            ),
+                          Checkbox(
+                            value: require,
+                            onChanged: (flag) {
+                              require = flag!;
+                              if (flag) {
+                                requires.add(widget.users[index].userKey);
+                                watchs.remove(widget.users[index].userKey);
+                                watch = false;
+                              } else
+                                requires.remove(widget.users[index].userKey);
+                              setState(() {});
+                            },
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 15),
-                            // watchers
-                            child: Checkbox(
-                              value: watch,
-                              onChanged: (flag) {
-                                watch = flag!;
-                                if (flag) {
-                                  watchs.add(users[index].userKey);
-                                  requires.remove(users[index].userKey);
-                                  require = false;
-                                } else
-                                  watchs.remove(users[index].userKey);
-                                setState(() {});
-                              },
-                            ),
+                          Checkbox(
+                            value: watch,
+                            onChanged: (flag) {
+                              watch = flag!;
+                              if (flag) {
+                                watchs.add(widget.users[index].userKey);
+                                requires.remove(widget.users[index].userKey);
+                                require = false;
+                              } else
+                                watchs.remove(widget.users[index].userKey);
+                              setState(() {});
+                            },
                           ),
                         ],
                       ),

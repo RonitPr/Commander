@@ -6,7 +6,6 @@ import 'package:commander/widget/CreateCommandForm.dart';
 import 'package:commander/widget/CreateGroupForm.dart';
 import 'package:flutter/material.dart';
 
-import 'Command.dart';
 import 'User.dart';
 
 void main() {
@@ -135,10 +134,21 @@ class _MyHomePageState extends State<MyHomePage> {
           ? null
           : FloatingActionButton.extended(
               onPressed: () async {
+                List<User> users = [
+                  User('1שם של דביל', 'userKey1'),
+                  User('2שם של דביל', 'userKey2'),
+                  User('3שם של דביל', 'userKey3'),
+                  User('4שם של דביל', 'userKey4'),
+                  User('5שם של דביל', 'userKey5'),
+                  User('6שם של דביל', 'userKey6'),
+                  User('7שם של דביל', 'userKey7'),
+                  User('8שם של דביל', 'userKey8'),
+                  User('9שם של דביל', 'userKey9'),
+                ];
                 await getDialog(
                   context,
                   "צור פקודה חדשה",
-                  CreateCommandForm(),
+                  CreateCommandForm(users),
                 );
               },
               label: Text('צור פקודה חדשה'),
@@ -147,6 +157,4 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
     );
   }
-
-  bool pushToDb(Command command) => false;
 }
