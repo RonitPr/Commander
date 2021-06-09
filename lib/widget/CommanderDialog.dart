@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Future getDialog(BuildContext context, String title, Widget child) {
+Future<dynamic> getDialog(BuildContext context, String title, Widget child) {
   return showDialog(
     context: context,
     barrierDismissible: false,
@@ -41,7 +41,21 @@ Future getDialog(BuildContext context, String title, Widget child) {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(30)),
         ),
-        content: child,
+        content: Column(
+          children: [
+            child,
+            Container(
+              child: Row(
+                children: [
+                  TextButton(
+                    onPressed: () {},
+                    child: Text('צור'),
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
       );
     },
   );

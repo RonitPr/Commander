@@ -2,7 +2,9 @@ import 'package:commander/Group.dart';
 import 'package:commander/screens/mainScreen.dart';
 import 'package:commander/widget/CommanderDialog.dart';
 import 'package:flutter/material.dart';
+import 'package:toast/toast.dart';
 
+import 'Command.dart';
 import 'User.dart';
 
 void main() {
@@ -119,7 +121,9 @@ class _MyHomePageState extends State<MyHomePage> {
       body: MainScreen(),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
-          await getDialog(context, "צור דוגמה", Container());
+          Command command =
+              await getDialog(context, "בנה פקודה חדשה", Container());
+          if (!pushToDb(command)) Toast.show('פקודה לא נקלטה', context);
         },
         label: Text('צור פקודה חדשה'),
         icon: Icon(Icons.add),
@@ -127,4 +131,6 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+
+  bool pushToDb(Command command) => false;
 }
