@@ -1,6 +1,5 @@
 import 'package:commander/Group.dart';
 import 'package:commander/screens/mainScreen.dart';
-import 'package:commander/widget/CommanderDialog.dart';
 import 'package:flutter/material.dart';
 
 import 'User.dart';
@@ -118,9 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: MainScreen(),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () async {
-          await getDialog(context, "צור דוגמה", Container());
-        },
+        onPressed: () async {},
         label: Text('צור פקודה חדשה'),
         icon: Icon(Icons.add),
         backgroundColor: Colors.green[800],
