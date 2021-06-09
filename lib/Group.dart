@@ -1,3 +1,5 @@
+import 'package:commander/widget/CommanderDialogUI.dart';
+import 'package:commander/widget/CreateCommandForm.dart';
 import 'package:flutter/material.dart';
 
 import 'User.dart';
@@ -22,8 +24,12 @@ class Group extends StatelessWidget {
             ),
           ),
           TextButton(
-            onPressed: () {
-              // TODO :: create new command with this group attached
+            onPressed: () async {
+              await getDialog(
+                context,
+                "צור פקודה חדשה לקבוצה",
+                CreateCommandForm(users),
+              );
             },
             style: TextButton.styleFrom(
               primary: Colors.white,
