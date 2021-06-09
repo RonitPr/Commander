@@ -1,7 +1,7 @@
 class UserChoiceForGroupController {
   List<String> _selecterUsersIds = [];
 
-  getSelectedUserIds() {
+  List<String> getSelectedUserIds() {
     return _selecterUsersIds;
   }
 
@@ -13,7 +13,7 @@ class UserChoiceForGroupController {
     _selecterUsersIds.remove(userId);
   }
 
-  containsId(String userId) {
+  bool containsId(String userId) {
     return _selecterUsersIds.contains(userId);
   }
 }
