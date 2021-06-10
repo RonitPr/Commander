@@ -58,8 +58,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void refreshGroups() async {
     List<Group>? groups;
-    groups = (await getGroups(
-            currentUser!.userKey, refreshCommands, currentUser!.userKey))!
+    groups = (await getGroups(currentUser!.userKey, refreshCommands,
+            currentUser!.userKey, currentUser!.username))!
         .cast<Group>();
     setState(() {
       this.groups = groups!;
@@ -161,6 +161,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   "צור פקודה חדשה",
                   CreateCommandForm2(
                     author: this.currentUser!.userKey,
+                    authorName: this.currentUser!.username,
                     refreshFunction: refreshCommands,
                   ),
                 );

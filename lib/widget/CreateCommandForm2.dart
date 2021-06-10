@@ -6,6 +6,7 @@ import 'package:file_picker/file_picker.dart';
 
 class CreateCommandForm2 extends StatefulWidget {
   final String author;
+  final String authorName;
   final Function refreshFunction;
   final List<User> fromGroup;
   const CreateCommandForm2({
@@ -13,6 +14,7 @@ class CreateCommandForm2 extends StatefulWidget {
     required this.author,
     required this.refreshFunction,
     this.fromGroup = const [],
+    required this.authorName,
   }) : super(key: key);
 
   @override
@@ -37,6 +39,7 @@ class _CreateCommandForm2State extends State<CreateCommandForm2> {
       getAllUsers().then((value) {
         setState(() {
           this.users = value!;
+          users.remove(User(widget.authorName, widget.author));
         });
       });
     }
@@ -193,7 +196,6 @@ class _CreateCommandForm2State extends State<CreateCommandForm2> {
                     this.requires,
                     this.watchs,
                   );
-                  widget.refreshFunction();
                   Navigator.pop(context);
                   if (responsePost == "OK")
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -201,6 +203,7 @@ class _CreateCommandForm2State extends State<CreateCommandForm2> {
                   else
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text('אופס.. נראה שהייתה בעיה ביצירה')));
+                  widget.refreshFunction();
                 }
               },
               child: Icon(Icons.done, color: Colors.white),

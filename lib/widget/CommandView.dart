@@ -23,14 +23,11 @@ class CommandView extends StatefulWidget {
 class _CommandViewState extends State<CommandView> {
   bool expanded = false;
   List<User> users = [];
-  double progress = 0;
+  late double progress;
   @override
   void initState() {
     super.initState();
-    progress = max(
-        (widget.command.accepted.length / widget.command.require.length) * 100,
-        0.1);
-    print(progress);
+
     getAllUsers().then((value) {
       setState(() {
         this.users = value!;
@@ -41,11 +38,35 @@ class _CommandViewState extends State<CommandView> {
   @override
   Widget build(BuildContext context) {
     bool approved = false;
-    (widget.command.accepted + widget.command.require).forEach((element) {
-      if (element == widget.user.userKey) {
-        approved = true;
-      }
-    });
+    bool author = false;
+    bool watcher = false;
+    progress = max(
+        (widget.command.accepted.length / widget.command.require.length) * 100,
+        0);
+    print(widget.command.accepted);
+    // Check if author
+    if (widget.user.userKey == widget.command.author) author = true;
+
+    /// if Not author
+    if (!author) {
+      // If user in accepted
+      (widget.command.accepted).forEach((element) {
+        if (element == widget.user.userKey) {
+          approved = true;
+        }
+      });
+      // if user in watcher
+      (widget.command.watch).forEach((element) {
+        if (element == widget.user.userKey) {
+          watcher = true;
+        }
+      });
+    }
+
+    if ((!author && !approved && !watcher))
+      widget.command.require.forEach((element) {
+        if (element == widget.user.userKey) approved = false;
+      });
     List<dynamic> requireAndWatch =
         widget.command.require + widget.command.watch;
     return Container(
@@ -83,34 +104,39 @@ class _CommandViewState extends State<CommandView> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      !approved
-                          ? TextButton(
-                              onPressed: () {
-                                widget.command.accepted
-                                    .add(widget.user.userKey);
-                                approveCommand(
-                                        widget.user.userKey, widget.command.id)
-                                    .then(
-                                  (value) => ScaffoldMessenger.of(context)
-                                      .showSnackBar(
-                                    SnackBar(
-                                      content: Text(value
-                                          ? 'אישור נקלט בהצלחה'
-                                          : 'אופס.. נראה שהייתה בעיה'),
-                                    ),
+                      !author
+                          ? !approved && !watcher
+                              ? TextButton(
+                                  onPressed: () {
+                                    widget.command.accepted
+                                        .add(widget.user.userKey);
+                                    approveCommand(widget.user.userKey,
+                                            widget.command.id)
+                                        .then(
+                                      (value) => ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(value
+                                              ? 'אישור נקלט בהצלחה'
+                                              : 'אופס.. נראה שהייתה בעיה'),
+                                        ),
+                                      ),
+                                    );
+                                    setState(() {});
+                                  },
+                                  style: TextButton.styleFrom(
+                                    primary: Colors.white,
+                                    backgroundColor: Colors.green,
                                   ),
-                                );
-                                setState(() {});
-                              },
-                              style: TextButton.styleFrom(
-                                primary: Colors.white,
-                                backgroundColor: Colors.green,
-                              ),
-                              child: Text(' אשר פקודה '),
-                            )
-                          : Icon(
-                              Icons.check_circle_rounded,
-                              color: Colors.green,
+                                  child: Text(' אשר פקודה '),
+                                )
+                              : Icon(
+                                  Icons.check_circle_rounded,
+                                  color: Colors.green,
+                                )
+                          : Container(
+                              padding: EdgeInsets.all(10),
+                              child: Text('בטיפול'),
                             ),
                     ],
                   ),

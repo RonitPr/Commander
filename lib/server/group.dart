@@ -23,7 +23,7 @@ Future<String?> createNewGroup(
 }
 
 Future<List<Group?>?> getGroups(
-    String uid, Function refreshForCommand, String authorForCommand) async {
+    String uid, Function refreshForCommand, String authorForCommand, String authorForCommandNAME) async {
   Uri url = Uri.parse('$server_url/getUserGroups?uid=' + uid);
   http.Response r = await http.get(url);
   if (r.statusCode != 200) {
@@ -40,6 +40,7 @@ Future<List<Group?>?> getGroups(
         title: groupObject["title"],
         users: users,
         author: authorForCommand,
+        authorName: authorForCommandNAME,
         refreshFunction: refreshForCommand,
       ));
     }
