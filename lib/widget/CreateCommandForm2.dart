@@ -148,10 +148,13 @@ class _CreateCommandForm2State extends State<CreateCommandForm2> {
                               activeColor: Colors.green,
                               value: this.requires.contains(userId),
                               onChanged: (bool? value) {
-                                if (value != null)
-                                  !value
-                                      ? this.requires.remove(userId)
-                                      : this.requires.add(userId);
+                                if (value != null) {
+                                  if (!value) {
+                                    this.requires.remove(userId);
+                                  } else {
+                                    this.requires.add(userId);
+                                  }
+                                }
                                 setState(() {});
                               },
                             ),

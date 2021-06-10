@@ -1,5 +1,6 @@
 String getStringFromList(List<String> list) {
   Map<String, String> toExplicitString = {};
+  if (list.isEmpty) return "[]";
   list.forEach((element) {
     toExplicitString[element] = "\"" + element + "\"";
   });
@@ -9,5 +10,6 @@ String getStringFromList(List<String> list) {
   });
   result = result.substring(0, result.length - 1);
   if (result.isNotEmpty) result = result + "]";
+
   return result;
 }

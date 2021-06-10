@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:commander/Command.dart';
 import 'package:commander/User.dart';
 import 'package:commander/server/command.dart';
@@ -20,11 +22,26 @@ class CommandView extends StatefulWidget {
 
 class _CommandViewState extends State<CommandView> {
   bool expanded = false;
+  List<User> users = [];
+  double progress = 0;
+  @override
+  void initState() {
+    super.initState();
+    progress = max(
+        (widget.command.accepted.length / widget.command.require.length) * 100,
+        0.1);
+    print(progress);
+    getAllUsers().then((value) {
+      setState(() {
+        this.users = value!;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     bool approved = false;
-    print(widget.command.accepted);
-    widget.command.accepted.forEach((element) {
+    (widget.command.accepted + widget.command.require).forEach((element) {
       if (element == widget.user.userKey) {
         approved = true;
       }
@@ -99,9 +116,7 @@ class _CommandViewState extends State<CommandView> {
                   ),
                 ),
                 RoundedProgressBar(
-                  percent: (widget.command.accepted.length /
-                          widget.command.require.length) *
-                      100,
+                  percent: this.progress,
                   paddingChildLeft: EdgeInsets.symmetric(horizontal: 10),
                   childLeft: Container(
                     padding: EdgeInsets.all(2),
@@ -162,8 +177,11 @@ class _CommandViewState extends State<CommandView> {
                     itemCount: requireAndWatch.length,
                     itemBuilder: (BuildContext context, int index) {
                       String userName = '';
-                      getUserById(requireAndWatch[index])
-                          .then((value) => userName = value!.username);
+                      users.forEach((element) {
+                        if (element.userKey == requireAndWatch[index]) {
+                          userName = element.username;
+                        }
+                      });
                       String status = '';
                       widget.command.accepted.forEach((element) {
                         if (element == requireAndWatch[index])
