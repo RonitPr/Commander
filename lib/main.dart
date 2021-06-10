@@ -167,10 +167,13 @@ class _MyHomePageState extends State<MyHomePage> {
                       ],
                     ),
                   ),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: this.groups,
-                  ),
+                  this.groups.length == 0
+                      ? Container(
+                          child: Center(child: Text("אין קבוצות להצגה")))
+                      : Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: this.groups,
+                        ),
                 ],
               ),
             ),
