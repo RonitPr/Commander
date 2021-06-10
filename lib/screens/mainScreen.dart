@@ -27,7 +27,7 @@ class MainScreen extends StatelessWidget {
                 ),
               )
             : Container(
-                child: Text('No commands'),
+                child: Center(child: Text('No commands')),
               ),
       ),
     );
