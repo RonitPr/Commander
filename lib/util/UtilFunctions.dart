@@ -8,6 +8,6 @@ String getStringFromList(List<String> list) {
     result += value + ",";
   });
   result = result.substring(0, result.length - 1);
-  result = result + "]";
+  if (result.isNotEmpty) result = result + "]";
   return result;
 }

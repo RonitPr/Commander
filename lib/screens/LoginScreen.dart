@@ -123,7 +123,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 color: Colors.green[900],
                 child: Center(
                   child: Text(
-                    'Loading...',
+                    'טוען...',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 25,

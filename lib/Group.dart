@@ -1,5 +1,5 @@
 import 'package:commander/widget/CommanderDialogUI.dart';
-import 'package:commander/widget/CreateCommandForm.dart';
+import 'package:commander/widget/CreateCommandForm2.dart';
 import 'package:flutter/material.dart';
 
 import 'User.dart';
@@ -8,9 +8,16 @@ class Group extends StatelessWidget {
   final String id;
   final String title;
   final List<User> users;
+  final String author;
+  final Function refreshFunction;
 
   const Group(
-      {Key? key, required this.title, required this.users, required this.id})
+      {Key? key,
+      required this.title,
+      required this.users,
+      required this.id,
+      required this.author,
+      required this.refreshFunction})
       : super(key: key);
 
   @override
@@ -30,7 +37,11 @@ class Group extends StatelessWidget {
               await getDialog(
                 context,
                 "צור פקודה חדשה לקבוצה",
-                CreateCommandForm(users),
+                CreateCommandForm2(
+                  author: author,
+                  refreshFunction: refreshFunction,
+                  fromGroup: this.users,
+                ),
               );
             },
             style: TextButton.styleFrom(

@@ -4,7 +4,7 @@ import 'package:commander/screens/mainScreen.dart';
 import 'package:commander/server/command.dart';
 import 'package:commander/server/group.dart';
 import 'package:commander/widget/CommanderDialogUI.dart';
-import 'package:commander/widget/CreateCommandForm.dart';
+import 'package:commander/widget/CreateCommandForm2.dart';
 import 'package:commander/widget/CreateGroupForm.dart';
 import 'package:flutter/material.dart';
 
@@ -39,19 +39,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   User? currentUser;
   List<Command> commands = [];
-  List<Group> groups = <Group>[
-    Group(
-      id: "someRandomId",
-      title: 'קבוצה א׳',
-      users: [
-        User('איש 1', 'aaa'),
-        User('איש 2', 'aaa'),
-        User('איש 3', 'aaa'),
-        User('איש 4', 'aaa'),
-        User('איש 5', 'aaa'),
-      ],
-    ),
-  ];
+  List<Group> groups = <Group>[];
 
   void onLogin(User user) {
     setState(() {
@@ -61,7 +49,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void refreshCommands() async {
-    List<Command>? commands = await getCommandsById(currentUser!.userKey);
+    List<Command>? commands;
+    commands = (await getCommandsById(currentUser!.userKey));
     setState(() {
       this.commands = commands!;
     });
@@ -69,7 +58,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void refreshGroups() async {
     List<Group>? groups;
-    groups = (await getGroups(currentUser!.userKey))!.cast<Group>();
+    groups = (await getGroups(
+            currentUser!.userKey, refreshCommands, currentUser!.username))!
+        .cast<Group>();
     setState(() {
       this.groups = groups!;
     });
@@ -165,21 +156,13 @@ class _MyHomePageState extends State<MyHomePage> {
           ? null
           : FloatingActionButton.extended(
               onPressed: () async {
-                List<User> users = [
-                  User('1שם של דביל', 'userKey1'),
-                  User('2שם של דביל', 'userKey2'),
-                  User('3שם של דביל', 'userKey3'),
-                  User('4שם של דביל', 'userKey4'),
-                  User('5שם של דביל', 'userKey5'),
-                  User('6שם של דביל', 'userKey6'),
-                  User('7שם של דביל', 'userKey7'),
-                  User('8שם של דביל', 'userKey8'),
-                  User('9שם של דביל', 'userKey9'),
-                ];
                 await getDialog(
                   context,
                   "צור פקודה חדשה",
-                  CreateCommandForm(users),
+                  CreateCommandForm2(
+                    author: this.currentUser!.username,
+                    refreshFunction: refreshCommands,
+                  ),
                 );
               },
               label: Text('צור פקודה חדשה'),
