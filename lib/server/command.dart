@@ -23,17 +23,19 @@ Future<List<Command>?> getCommandsById(String uid) async {
   Uri uri = Uri.parse('$server_url/getMyCommands?uid=$uid');
   http.Response r = await http.get(uri);
   if (r.statusCode != 200) {
-    return null;
+    print('objectooooooo');
+    return [];
   }
   var data = jsonDecode(r.body);
   List<Command> commands = [];
   for (var command in data) {
+    String author = command['author'];
     String cid = command['cid'];
     String title = command['title'];
     List require = command['required_list'] as List<dynamic>;
     List watchers = command['watch_list'] as List<dynamic>;
     List accepted = command['approved_list'] as List<dynamic>;
-    commands.add(Command(title, cid, require, accepted, watchers));
+    commands.add(Command(author, title, cid, require, accepted, watchers));
   }
   return commands;
 }

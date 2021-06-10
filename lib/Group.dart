@@ -9,6 +9,7 @@ class Group extends StatelessWidget {
   final String title;
   final List<User> users;
   final String author;
+  final String authorName;
   final Function refreshFunction;
 
   const Group(
@@ -17,7 +18,7 @@ class Group extends StatelessWidget {
       required this.users,
       required this.id,
       required this.author,
-      required this.refreshFunction})
+      required this.refreshFunction, required this.authorName})
       : super(key: key);
 
   @override
@@ -39,6 +40,7 @@ class Group extends StatelessWidget {
                 "צור פקודה חדשה לקבוצה",
                 CreateCommandForm2(
                   author: author,
+                  authorName: authorName,
                   refreshFunction: refreshFunction,
                   fromGroup: this.users,
                 ),
