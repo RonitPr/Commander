@@ -45,6 +45,8 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       this.currentUser = user;
     });
+
+    refreshGroups();
     refreshCommands();
   }
 
@@ -112,28 +114,54 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                         Container(
                           margin: EdgeInsets.only(top: 10),
-                          child: TextButton(
-                            onPressed: () async {
-                              await getDialog(
-                                  context,
-                                  "צור קבוצה חדשה",
-                                  CreateGroupForm(
-                                    author: this.currentUser!.userKey,
-                                    refreshFunction: refreshGroups,
-                                  ));
-                            },
-                            style: TextButton.styleFrom(
-                              primary: Colors.white,
-                              backgroundColor: Colors.white,
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('צור קבוצה חדשה',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.lightGreen[800],
-                                  )),
-                            ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    this.currentUser = null;
+                                    this.groups = [];
+                                    this.commands = [];
+                                  });
+                                },
+                                style: TextButton.styleFrom(
+                                  primary: Colors.white,
+                                  backgroundColor: Colors.white,
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text('התנתק',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.redAccent,
+                                      )),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () async {
+                                  await getDialog(
+                                      context,
+                                      "צור קבוצה חדשה",
+                                      CreateGroupForm(
+                                        author: this.currentUser!.userKey,
+                                        refreshFunction: refreshGroups,
+                                      ));
+                                },
+                                style: TextButton.styleFrom(
+                                  primary: Colors.white,
+                                  backgroundColor: Colors.white,
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text('צור קבוצה חדשה',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.lightGreen[800],
+                                      )),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],

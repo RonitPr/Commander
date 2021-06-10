@@ -136,7 +136,13 @@ class _CommandViewState extends State<CommandView> {
                                 )
                           : Container(
                               padding: EdgeInsets.all(10),
-                              child: Text('בטיפול'),
+                              decoration: BoxDecoration(
+                                color: Colors.orange,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Text('בטיפול',
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.w600)),
                             ),
                     ],
                   ),

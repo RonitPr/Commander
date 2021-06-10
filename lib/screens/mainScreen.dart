@@ -22,7 +22,7 @@ class MainScreen extends StatelessWidget {
             ? ListView.builder(
                 itemCount: commands.length,
                 itemBuilder: (context, index) => CommandView(
-                  commands[index],
+                  commands[commands.length - index - 1],
                   user,
                 ),
               )

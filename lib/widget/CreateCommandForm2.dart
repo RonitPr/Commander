@@ -39,7 +39,7 @@ class _CreateCommandForm2State extends State<CreateCommandForm2> {
       getAllUsers().then((value) {
         setState(() {
           this.users = value!;
-          users.remove(User(widget.authorName, widget.author));
+          users.removeWhere((element) => element.userKey == this.widget.author);
         });
       });
     }

@@ -27,8 +27,9 @@ class _CreateGroupFormState extends State<CreateGroupForm> {
   void initState() {
     super.initState();
     getAllUsers().then((value) {
+      value!.removeWhere((element) => element.userKey == this.widget.author);
       setState(() {
-        this.users = value!;
+        this.users = value;
       });
     });
   }
